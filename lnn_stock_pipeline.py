@@ -7,13 +7,25 @@ from ncps.keras import LTC
 
 parser = argparse.ArgumentParser(description="Train an LNN on stock data")
 parser.add_argument('--csv', default='sample_stocks.csv', help='Path to CSV with Date and Close columns')
+parser.add_argument('--btc', action='store_true', help='Use real BTC price data instead of --csv')
+
 parser.add_argument('--epochs', type=int, default=20)
 parser.add_argument('--lookback', type=int, default=5)
 args = parser.parse_args()
 
 # Load data
-csv = pd.read_csv(args.csv)
-prices = csv['Close'].values.astype(np.float32)
+
+if args.btc:
+    url = "https://raw.githubusercontent.com/coinmetrics/data/master/csv/btc.csv"
+    df = pd.read_csv(url, usecols=["time", "PriceUSD"])
+    df = df.dropna()
+    prices = df["PriceUSD"].astype(np.float32).values
+    # limit to most recent 1000 days to keep training fast
+    prices = prices[-1000:]
+else:
+    csv = pd.read_csv(args.csv)
+    prices = csv['Close'].values.astype(np.float32)
+
 
 # Build sequences
 lookback = args.lookback
