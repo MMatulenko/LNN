@@ -21,7 +21,10 @@ dataset `sample_stocks.csv` is included for testing.
 
 ```bash
 pip install tensorflow ncps pandas
+# synthetic data
 python lnn_stock_pipeline.py --csv sample_stocks.csv --epochs 5
+# or fetch real Bitcoin prices
+python lnn_stock_pipeline.py --btc --epochs 5
 ```
 
 The GitHub Actions workflow in `.github/workflows/stock.yml` installs the
