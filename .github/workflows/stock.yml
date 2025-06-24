@@ -1,0 +1,15 @@
+name: Stock Pipeline
+on: [push]
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    - name: Install dependencies
+      run: |
+        pip install tensorflow==2.18.0 ncps pandas
+    - name: Run pipeline
+      run: python lnn_stock_pipeline.py --epochs 5
